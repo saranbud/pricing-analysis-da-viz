@@ -34,7 +34,8 @@ This project answers that question by analyzing **4,400+ orders** across a speci
 ### Executive Summary
 > Total revenue, order volume, gross margin, and selling price KPIs with year-over-year and monthly trend charts.
 
-![Executive Summary](images/01_executive_summary.png)
+<img width="1872" height="657" alt="image" src="https://github.com/user-attachments/assets/7eb8a436-a147-46c5-8f71-edb4a17a7db7" />
+
 
 ### Revenue & Growth
 > Year-over-year revenue comparison, monthly overlays, and markup trend analysis.
