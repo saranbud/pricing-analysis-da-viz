@@ -1,0 +1,1672 @@
+{
+  "datasets": [
+    {
+      "name": "orders_mv",
+      "displayName": "Orders — Pricing Master View",
+      "config": {
+        "version": "1.1",
+        "source": "Pricing_analysis.data.orders_master",
+        "dimensions": [
+          {
+            "name": "OrderDate",
+            "expr": "OrderDate"
+          },
+          {
+            "name": "OrderYear",
+            "expr": "OrderYear"
+          },
+          {
+            "name": "OrderMonth",
+            "expr": "OrderMonth"
+          },
+          {
+            "name": "OrderMonthDate",
+            "expr": "OrderMonthDate"
+          },
+          {
+            "name": "ProductName",
+            "expr": "ProductName"
+          },
+          {
+            "name": "ProductCategory",
+            "expr": "ProductCategory"
+          },
+          {
+            "name": "Region",
+            "expr": "Region"
+          },
+          {
+            "name": "CustomerID",
+            "expr": "CustomerID"
+          }
+        ],
+        "measures": [
+          {
+            "name": "Total Revenue",
+            "expr": "SUM(Revenue)"
+          },
+          {
+            "name": "Total COGS",
+            "expr": "SUM(COGS)"
+          },
+          {
+            "name": "Total Gross Profit",
+            "expr": "SUM(GrossProfit)"
+          },
+          {
+            "name": "Total Orders",
+            "expr": "COUNT(*)"
+          },
+          {
+            "name": "Total Units",
+            "expr": "SUM(Quantity)"
+          },
+          {
+            "name": "Avg Gross Margin Pct",
+            "expr": "AVG(GrossMarginPct)"
+          },
+          {
+            "name": "Avg Selling Price",
+            "expr": "AVG(AvgSellingPrice)"
+          },
+          {
+            "name": "Avg Markup Pct",
+            "expr": "AVG(MarkupPct)"
+          },
+          {
+            "name": "Gross Margin Pct Weighted",
+            "expr": "SUM(GrossProfit) / SUM(Revenue) * 100"
+          }
+        ]
+      }
+    },
+    {
+      "name": "prod_bottom10_margin",
+      "displayName": "Bottom 10 Products by Gross Margin %",
+      "queryLines": [
+        "SELECT\n",
+        "  ProductID,\n",
+        "  ProductName,\n",
+        "  ProductCategory,\n",
+        "  ListPrice,\n",
+        "  BaseCost,\n",
+        "  UnitMargin,\n",
+        "  ActualGrossMarginPct\n",
+        "FROM\n",
+        "  Pricing_analysis.data.product_profitability\n",
+        "ORDER BY\n",
+        "  ActualGrossMarginPct ASC\n",
+        "LIMIT 10"
+      ]
+    },
+    {
+      "name": "product_profitability",
+      "displayName": "Product Profitability — All Products",
+      "queryLines": [
+        "SELECT\n",
+        "  ProductID,\n",
+        "  ProductName,\n",
+        "  ProductCategory,\n",
+        "  ListPrice,\n",
+        "  BaseCost,\n",
+        "  UnitMargin,\n",
+        "  MarginPct,\n",
+        "  MarkupPct,\n",
+        "  TotalOrders,\n",
+        "  TotalUnitsSold,\n",
+        "  TotalRevenue,\n",
+        "  TotalGrossProfit,\n",
+        "  ActualGrossMarginPct\n",
+        "FROM\n",
+        "  Pricing_analysis.data.product_profitability\n",
+        "ORDER BY\n",
+        "  TotalGrossProfit DESC"
+      ]
+    },
+    {
+      "name": "orders_sql",
+      "displayName": "Orders — SQL (Pricing Intelligence Page)",
+      "queryLines": [
+        "SELECT\n",
+        "  OrderMonthDate,\n",
+        "  OrderYear,\n",
+        "  OrderMonth,\n",
+        "  ProductCategory,\n",
+        "  Region,\n",
+        "  ProductName,\n",
+        "  SUM(Revenue) AS TotalRevenue,\n",
+        "  SUM(GrossProfit) AS TotalGrossProfit,\n",
+        "  SUM(COGS) AS TotalCOGS,\n",
+        "  COUNT(*) AS TotalOrders,\n",
+        "  AVG(GrossMarginPct) AS AvgGrossMarginPct,\n",
+        "  AVG(AvgSellingPrice) AS AvgSellingPrice\n",
+        "FROM\n",
+        "  Pricing_analysis.data.orders_master\n",
+        "GROUP BY\n",
+        "  OrderMonthDate,\n",
+        "  OrderYear,\n",
+        "  OrderMonth,\n",
+        "  ProductCategory,\n",
+        "  Region,\n",
+        "  ProductName"
+      ]
+    }
+  ],
+  "pages": [
+    {
+      "name": "42bf2584",
+      "displayName": "Executive Summary",
+      "layout": [
+        {
+          "widget": {
+            "name": "header_exec",
+            "multilineTextboxSpec": {
+              "lines": [
+                "## Specialty Coffee Pricing Analysis — 2023–2025\n",
+                "Three years of order history · $871K total revenue · 54.5% gross margin · 200 customers · 50 products across 5 categories"
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 12,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "counter_revenue",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "orders_mv",
+                  "fields": [
+                    {
+                      "name": "measure(Total Revenue)",
+                      "expression": "MEASURE(`Total Revenue`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "title": "Total Revenue",
+                "showTitle": true
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "measure(Total Revenue)",
+                  "format": {
+                    "type": "number-currency",
+                    "currencyCode": "USD",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "exact",
+                      "places": 0
+                    }
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 2,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "counter_orders",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "orders_mv",
+                  "fields": [
+                    {
+                      "name": "measure(Total Orders)",
+                      "expression": "MEASURE(`Total Orders`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "title": "Total Orders",
+                "showTitle": true
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "measure(Total Orders)",
+                  "format": {
+                    "type": "number-plain",
+                    "abbreviation": "none"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 3,
+            "y": 2,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "counter_margin",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "orders_mv",
+                  "fields": [
+                    {
+                      "name": "measure(Avg Gross Margin Pct)",
+                      "expression": "MEASURE(`Avg Gross Margin Pct`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "title": "Avg Gross Margin %",
+                "showTitle": true
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "measure(Avg Gross Margin Pct)",
+                  "format": {
+                    "type": "number-plain",
+                    "abbreviation": "none",
+                    "decimalPlaces": {
+                      "type": "exact",
+                      "places": 1
+                    }
+                  },
+                  "formatTemplate": "{{ @formatted }}%"
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 2,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "counter_asp",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "orders_mv",
+                  "fields": [
+                    {
+                      "name": "measure(Avg Selling Price)",
+                      "expression": "MEASURE(`Avg Selling Price`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "title": "Avg Selling Price",
+                "showTitle": true
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "measure(Avg Selling Price)",
+                  "format": {
+                    "type": "number-currency",
+                    "currencyCode": "USD",
+                    "abbreviation": "none",
+                    "decimalPlaces": {
+                      "type": "exact",
+                      "places": 2
+                    }
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 9,
+            "y": 2,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "bar_revenue_year",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "orders_mv",
+                  "fields": [
+                    {
+                      "name": "OrderYear",
+                      "expression": "`OrderYear`"
+                    },
+                    {
+                      "name": "measure(Total Revenue)",
+                      "expression": "MEASURE(`Total Revenue`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "Revenue by Year",
+                "showTitle": true,
+                "description": "Year-over-year total revenue — track growth or decline across 2023, 2024, and 2025.",
+                "showDescription": true
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "OrderYear",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "measure(Total Revenue)",
+                  "format": {
+                    "type": "number-currency",
+                    "currencyCode": "USD",
+                    "abbreviation": "compact"
+                  },
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 5,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "bar_revenue_category",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "orders_mv",
+                  "fields": [
+                    {
+                      "name": "ProductCategory",
+                      "expression": "`ProductCategory`"
+                    },
+                    {
+                      "name": "measure(Total Revenue)",
+                      "expression": "MEASURE(`Total Revenue`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "Revenue by Category",
+                "showTitle": true,
+                "description": "Which categories drive the most volume? Consumables, Subscriptions, Merchandise, Grinders & Brewers, and Accessories.",
+                "showDescription": true
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "ProductCategory",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "measure(Total Revenue)",
+                  "format": {
+                    "type": "number-currency",
+                    "currencyCode": "USD",
+                    "abbreviation": "compact"
+                  },
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 5,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "line_monthly_revenue",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "orders_mv",
+                  "fields": [
+                    {
+                      "name": "OrderMonthDate",
+                      "expression": "`OrderMonthDate`"
+                    },
+                    {
+                      "name": "measure(Total Revenue)",
+                      "expression": "MEASURE(`Total Revenue`)"
+                    },
+                    {
+                      "name": "measure(Total Gross Profit)",
+                      "expression": "MEASURE(`Total Gross Profit`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "Monthly Revenue & Gross Profit Trend",
+                "showTitle": true,
+                "description": "Track the gap between revenue and gross profit month by month. A widening gap signals rising COGS relative to pricing.",
+                "showDescription": true
+              },
+              "widgetType": "line",
+              "encodings": {
+                "x": {
+                  "fieldName": "OrderMonthDate",
+                  "scale": {
+                    "type": "temporal"
+                  }
+                },
+                "y": {
+                  "fields": [
+                    {
+                      "fieldName": "measure(Total Revenue)"
+                    },
+                    {
+                      "fieldName": "measure(Total Gross Profit)"
+                    }
+                  ],
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "format": {
+                    "type": "number-currency",
+                    "currencyCode": "USD",
+                    "abbreviation": "compact"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 11,
+            "width": 12,
+            "height": 6
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    },
+    {
+      "name": "revenue_growth",
+      "displayName": "Revenue & Growth",
+      "layout": [
+        {
+          "widget": {
+            "name": "header_rg",
+            "multilineTextboxSpec": {
+              "lines": [
+                "## Revenue & Growth Analysis\n",
+                "How has revenue evolved across 2023, 2024, and 2025? Explore year-over-year trends, seasonal cycles, and whether each passing year has grown our top-line and maintained our margin health."
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 12,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "line_yoy_monthly",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "orders_mv",
+                  "fields": [
+                    {
+                      "name": "OrderYear",
+                      "expression": "`OrderYear`"
+                    },
+                    {
+                      "name": "OrderMonth",
+                      "expression": "`OrderMonth`"
+                    },
+                    {
+                      "name": "measure(Total Revenue)",
+                      "expression": "MEASURE(`Total Revenue`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "Monthly Revenue by Year (YoY Comparison)",
+                "showTitle": true,
+                "description": "Each line represents one fiscal year. Overlapping months reveal seasonal peaks and allow direct year-to-year comparison.",
+                "showDescription": true
+              },
+              "widgetType": "line",
+              "encodings": {
+                "x": {
+                  "fieldName": "OrderMonth",
+                  "axis": {
+                    "title": "Month"
+                  },
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "measure(Total Revenue)",
+                  "format": {
+                    "type": "number-currency",
+                    "currencyCode": "USD",
+                    "abbreviation": "compact"
+                  },
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "OrderYear",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 2,
+            "width": 12,
+            "height": 7
+          }
+        },
+        {
+          "widget": {
+            "name": "bar_revenue_year_rg",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "orders_mv",
+                  "fields": [
+                    {
+                      "name": "OrderYear",
+                      "expression": "`OrderYear`"
+                    },
+                    {
+                      "name": "measure(Total Revenue)",
+                      "expression": "MEASURE(`Total Revenue`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "Total Revenue by Year",
+                "showTitle": true,
+                "description": "Is the business growing? 2025 is a partial year — factor in the mid-year cutoff when comparing against full years.",
+                "showDescription": true
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "OrderYear",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "measure(Total Revenue)",
+                  "format": {
+                    "type": "number-currency",
+                    "currencyCode": "USD",
+                    "abbreviation": "compact"
+                  },
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 9,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "bar_margin_year",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "orders_mv",
+                  "fields": [
+                    {
+                      "name": "OrderYear",
+                      "expression": "`OrderYear`"
+                    },
+                    {
+                      "name": "measure(Avg Gross Margin Pct)",
+                      "expression": "MEASURE(`Avg Gross Margin Pct`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "Avg Gross Margin % by Year",
+                "showTitle": true,
+                "description": "Is our pricing discipline holding? A stable or rising margin year-on-year means we are not sacrificing profitability for volume.",
+                "showDescription": true
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "OrderYear",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "measure(Avg Gross Margin Pct)",
+                  "formatTemplate": "{{ @formatted }}%",
+                  "format": {
+                    "type": "number-plain",
+                    "abbreviation": "none",
+                    "decimalPlaces": {
+                      "type": "exact",
+                      "places": 1
+                    }
+                  },
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 9,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "line_monthly_markup",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "orders_mv",
+                  "fields": [
+                    {
+                      "name": "OrderMonthDate",
+                      "expression": "`OrderMonthDate`"
+                    },
+                    {
+                      "name": "measure(Avg Markup Pct)",
+                      "expression": "MEASURE(`Avg Markup Pct`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "Monthly Avg Markup % Trend",
+                "showTitle": true,
+                "description": "Markup % shows how far above base cost we are pricing. Dips signal pricing pressure; spikes may indicate mix shift toward premium products.",
+                "showDescription": true
+              },
+              "widgetType": "line",
+              "encodings": {
+                "x": {
+                  "fieldName": "OrderMonthDate",
+                  "scale": {
+                    "type": "temporal"
+                  }
+                },
+                "y": {
+                  "fieldName": "measure(Avg Markup Pct)",
+                  "formatTemplate": "{{ @formatted }}%",
+                  "format": {
+                    "type": "number-plain",
+                    "abbreviation": "none",
+                    "decimalPlaces": {
+                      "type": "exact",
+                      "places": 1
+                    }
+                  },
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 15,
+            "width": 12,
+            "height": 5
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    },
+    {
+      "name": "product_profitability",
+      "displayName": "Product Profitability",
+      "layout": [
+        {
+          "widget": {
+            "name": "header_pp",
+            "multilineTextboxSpec": {
+              "lines": [
+                "## Product Profitability Analysis\n",
+                "Not all products are created equal. Explore which categories and products deliver the highest margins, which are underpriced relative to their cost, and where pricing power is strongest across all 50 SKUs and 5 categories."
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 12,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "bar_rev_cat",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "orders_mv",
+                  "fields": [
+                    {
+                      "name": "ProductCategory",
+                      "expression": "`ProductCategory`"
+                    },
+                    {
+                      "name": "measure(Total Revenue)",
+                      "expression": "MEASURE(`Total Revenue`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "Revenue by Category",
+                "showTitle": true,
+                "description": "Which categories drive top-line volume? Revenue from highest to lowest category.",
+                "showDescription": true
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "ProductCategory",
+                  "scale": {
+                    "type": "categorical",
+                    "sort": {
+                      "by": "y-reversed"
+                    }
+                  }
+                },
+                "y": {
+                  "fieldName": "measure(Total Revenue)",
+                  "format": {
+                    "type": "number-currency",
+                    "currencyCode": "USD",
+                    "abbreviation": "compact"
+                  },
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 2,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "bar_margin_cat",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "orders_mv",
+                  "fields": [
+                    {
+                      "name": "ProductCategory",
+                      "expression": "`ProductCategory`"
+                    },
+                    {
+                      "name": "measure(Avg Gross Margin Pct)",
+                      "expression": "MEASURE(`Avg Gross Margin Pct`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "Avg Gross Margin % by Category",
+                "showTitle": true,
+                "description": "Which categories protect profitability best? Higher margin = more pricing power per dollar of cost.",
+                "showDescription": true
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "ProductCategory",
+                  "scale": {
+                    "type": "categorical",
+                    "sort": {
+                      "by": "y-reversed"
+                    }
+                  }
+                },
+                "y": {
+                  "fieldName": "measure(Avg Gross Margin Pct)",
+                  "formatTemplate": "{{ @formatted }}%",
+                  "format": {
+                    "type": "number-plain",
+                    "abbreviation": "none",
+                    "decimalPlaces": {
+                      "type": "exact",
+                      "places": 1
+                    }
+                  },
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 2,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "bar_markup_cat",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "orders_mv",
+                  "fields": [
+                    {
+                      "name": "ProductCategory",
+                      "expression": "`ProductCategory`"
+                    },
+                    {
+                      "name": "measure(Avg Markup Pct)",
+                      "expression": "MEASURE(`Avg Markup Pct`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "Avg Markup % by Category",
+                "showTitle": true,
+                "description": "Markup % is the pricing power signal: how far above base cost are we charging? Categories with high markup have strong pricing leverage.",
+                "showDescription": true
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "ProductCategory",
+                  "scale": {
+                    "type": "categorical",
+                    "sort": {
+                      "by": "y-reversed"
+                    }
+                  }
+                },
+                "y": {
+                  "fieldName": "measure(Avg Markup Pct)",
+                  "formatTemplate": "{{ @formatted }}%",
+                  "format": {
+                    "type": "number-plain",
+                    "abbreviation": "none",
+                    "decimalPlaces": {
+                      "type": "exact",
+                      "places": 1
+                    }
+                  },
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 8,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "bar_asp_cat",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "orders_mv",
+                  "fields": [
+                    {
+                      "name": "ProductCategory",
+                      "expression": "`ProductCategory`"
+                    },
+                    {
+                      "name": "measure(Avg Selling Price)",
+                      "expression": "MEASURE(`Avg Selling Price`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "Avg Selling Price by Category",
+                "showTitle": true,
+                "description": "The actual price customers paid per unit on average. Compare this to list price to detect discounting patterns.",
+                "showDescription": true
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "ProductCategory",
+                  "scale": {
+                    "type": "categorical",
+                    "sort": {
+                      "by": "y-reversed"
+                    }
+                  }
+                },
+                "y": {
+                  "fieldName": "measure(Avg Selling Price)",
+                  "format": {
+                    "type": "number-currency",
+                    "currencyCode": "USD",
+                    "abbreviation": "none",
+                    "decimalPlaces": {
+                      "type": "exact",
+                      "places": 2
+                    }
+                  },
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 8,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "line_margin_cat_time",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "orders_mv",
+                  "fields": [
+                    {
+                      "name": "ProductCategory",
+                      "expression": "`ProductCategory`"
+                    },
+                    {
+                      "name": "OrderMonthDate",
+                      "expression": "`OrderMonthDate`"
+                    },
+                    {
+                      "name": "measure(Avg Gross Margin Pct)",
+                      "expression": "MEASURE(`Avg Gross Margin Pct`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "Gross Margin % by Category Over Time",
+                "showTitle": true,
+                "description": "Has each category’s margin improved, declined, or held steady? Diverging lines may reveal pricing strategy inconsistencies across the catalog.",
+                "showDescription": true
+              },
+              "widgetType": "line",
+              "encodings": {
+                "x": {
+                  "fieldName": "OrderMonthDate",
+                  "scale": {
+                    "type": "temporal"
+                  }
+                },
+                "y": {
+                  "fieldName": "measure(Avg Gross Margin Pct)",
+                  "formatTemplate": "{{ @formatted }}%",
+                  "format": {
+                    "type": "number-plain",
+                    "abbreviation": "none",
+                    "decimalPlaces": {
+                      "type": "exact",
+                      "places": 1
+                    }
+                  },
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "ProductCategory",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 14,
+            "width": 12,
+            "height": 6
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    },
+    {
+      "name": "regional_analysis",
+      "displayName": "Regional Analysis",
+      "layout": [
+        {
+          "widget": {
+            "name": "header_ra",
+            "multilineTextboxSpec": {
+              "lines": [
+                "## Regional Performance Analysis\n",
+                "Our business serves customers in East and West regions. Are they buying the same products at the same prices? Do regional pricing strategies differ — and should they? This section answers those questions with data."
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 12,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "bar_rev_region",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "orders_mv",
+                  "fields": [
+                    {
+                      "name": "Region",
+                      "expression": "`Region`"
+                    },
+                    {
+                      "name": "measure(Total Revenue)",
+                      "expression": "MEASURE(`Total Revenue`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "Revenue by Region",
+                "showTitle": true,
+                "description": "How does East vs. West split in total revenue? A large imbalance may point to market concentration risk.",
+                "showDescription": true
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "Region",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "measure(Total Revenue)",
+                  "format": {
+                    "type": "number-currency",
+                    "currencyCode": "USD",
+                    "abbreviation": "compact"
+                  },
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 2,
+            "width": 6,
+            "height": 5
+          }
+        },
+        {
+          "widget": {
+            "name": "bar_margin_region",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "orders_mv",
+                  "fields": [
+                    {
+                      "name": "Region",
+                      "expression": "`Region`"
+                    },
+                    {
+                      "name": "measure(Avg Gross Margin Pct)",
+                      "expression": "MEASURE(`Avg Gross Margin Pct`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "Avg Gross Margin % by Region",
+                "showTitle": true,
+                "description": "Do East and West customers generate the same margin? Regional differences in margin often reflect different product mix or discount practices.",
+                "showDescription": true
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "Region",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "measure(Avg Gross Margin Pct)",
+                  "formatTemplate": "{{ @formatted }}%",
+                  "format": {
+                    "type": "number-plain",
+                    "abbreviation": "none",
+                    "decimalPlaces": {
+                      "type": "exact",
+                      "places": 1
+                    }
+                  },
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 2,
+            "width": 6,
+            "height": 5
+          }
+        },
+        {
+          "widget": {
+            "name": "line_rev_region_monthly",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "orders_mv",
+                  "fields": [
+                    {
+                      "name": "Region",
+                      "expression": "`Region`"
+                    },
+                    {
+                      "name": "OrderMonthDate",
+                      "expression": "`OrderMonthDate`"
+                    },
+                    {
+                      "name": "measure(Total Revenue)",
+                      "expression": "MEASURE(`Total Revenue`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "Monthly Revenue by Region",
+                "showTitle": true,
+                "description": "Track both regions on the same timeline. Are they growing in parallel, or is one pulling ahead? Divergence after a certain date may signal a regional pricing change.",
+                "showDescription": true
+              },
+              "widgetType": "line",
+              "encodings": {
+                "x": {
+                  "fieldName": "OrderMonthDate",
+                  "scale": {
+                    "type": "temporal"
+                  }
+                },
+                "y": {
+                  "fieldName": "measure(Total Revenue)",
+                  "format": {
+                    "type": "number-currency",
+                    "currencyCode": "USD",
+                    "abbreviation": "compact"
+                  },
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "Region",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 7,
+            "width": 12,
+            "height": 7
+          }
+        },
+        {
+          "widget": {
+            "name": "bar_orders_region",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "orders_mv",
+                  "fields": [
+                    {
+                      "name": "Region",
+                      "expression": "`Region`"
+                    },
+                    {
+                      "name": "measure(Total Orders)",
+                      "expression": "MEASURE(`Total Orders`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "Total Orders by Region",
+                "showTitle": true,
+                "description": "Volume of transactions per region. Combine with revenue to compute average order value — are East customers buying more per order than West?",
+                "showDescription": true
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "Region",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "measure(Total Orders)",
+                  "format": {
+                    "type": "number-plain",
+                    "abbreviation": "compact"
+                  },
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 14,
+            "width": 6,
+            "height": 5
+          }
+        },
+        {
+          "widget": {
+            "name": "bar_markup_region",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "orders_mv",
+                  "fields": [
+                    {
+                      "name": "Region",
+                      "expression": "`Region`"
+                    },
+                    {
+                      "name": "measure(Avg Markup Pct)",
+                      "expression": "MEASURE(`Avg Markup Pct`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "Avg Markup % by Region",
+                "showTitle": true,
+                "description": "Pricing power signal per region. A lower markup in one region may indicate stronger competition, a different customer segment, or an opportunity to reprice.",
+                "showDescription": true
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "Region",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "measure(Avg Markup Pct)",
+                  "formatTemplate": "{{ @formatted }}%",
+                  "format": {
+                    "type": "number-plain",
+                    "abbreviation": "none",
+                    "decimalPlaces": {
+                      "type": "exact",
+                      "places": 1
+                    }
+                  },
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 14,
+            "width": 6,
+            "height": 5
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    },
+    {
+      "name": "pricing_intelligence",
+      "displayName": "Pricing Intelligence",
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    }
+  ],
+  "uiSettings": {
+    "theme": {
+      "canvasBackgroundColor": {
+        "light": "#FAF6EE",
+        "dark": "#0F1117"
+      },
+      "widgetBackgroundColor": {
+        "light": "#FFFFFF",
+        "dark": "#1A2232"
+      },
+      "widgetBorderColor": {
+        "light": "#E8DED0",
+        "dark": "#2C3D52"
+      },
+      "fontColor": {
+        "light": "#2C1A0E",
+        "dark": "#E8EAF0"
+      },
+      "selectionColor": {
+        "light": "#C87941",
+        "dark": "#E6A025"
+      },
+      "visualizationColors": [
+        "#C87941",
+        "#3D8F92",
+        "#E6A025",
+        "#7DAB42",
+        "#C95845",
+        "#6B63A3",
+        "#A67B5B",
+        "#4A90B8",
+        "#D4956B",
+        "#5BAA7C"
+      ],
+      "widgetHeaderAlignment": "ALIGNMENT_UNSPECIFIED",
+      "fontFamily": "Montserrat",
+      "widgetPadding": 16,
+      "widgetMargin": 8,
+      "widgetCornerRadius": 8,
+      "widgetShadow": 15,
+      "fontSettings": {
+        "base": {
+          "fontFamily": "Montserrat",
+          "fontColor": {
+            "light": "#2C1A0E",
+            "dark": "#E8EAF0"
+          }
+        },
+        "widgetTitle": {
+          "fontWeight": 600
+        },
+        "widgetDescription": {
+          "fontColor": {
+            "light": "#6B5B4E",
+            "dark": "#9BAAB8"
+          }
+        }
+      },
+      "gridLineColor": {
+        "light": "#EDE4D8",
+        "dark": "#243040"
+      },
+      "axisLineColor": {
+        "light": "#C8B8A8",
+        "dark": "#2C3D52"
+      }
+    },
+    "applyModeEnabled": false
+  }
+}
