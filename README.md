@@ -1,67 +1,89 @@
-# Specialty Coffee Pricing Analysis
+# ☕ Specialty Coffee Pricing Analysis — Strategic Review (2023–2025)
 
-End-to-end pricing analytics project for a specialty coffee business, covering order data from **2023–2025**. Includes a data pipeline notebook and an interactive Databricks Lakeview dashboard.
+## The Business Question
 
-## Repository Structure
+> *"Are we pricing our coffee products profitably across regions, and how has our pricing strategy performed over three years?"*
+
+This project answers that question by analyzing **4,400+ orders** across a specialty coffee company's full product catalog — from single-origin beans and subscriptions to grinders and accessories — spanning **2023 to 2025**.
+
+---
+
+## Key Findings
+
+| Insight | Detail |
+| --- | --- |
+| **Revenue Growth** | Tracked year-over-year revenue trends across 5 product categories to identify growth drivers |
+| **Margin Health** | Computed gross margins at both the product and category level to flag underperforming SKUs |
+| **Regional Pricing Power** | Compared East vs. West region performance to uncover pricing inconsistencies and market opportunities |
+| **Product Profitability Ranking** | Identified top and bottom 10 products by realized gross margin — surfacing items where discounts erode list-price margins |
+| **Pricing Trends Over Time** | Monthly markup and selling price trends reveal whether pricing discipline held or slipped |
+
+---
+
+## What This Project Demonstrates
+
+- **Data Engineering** — Built an automated pipeline that ingests raw CSV data, joins 5 source tables, and produces clean analytical datasets
+- **Business Analysis** — Translated raw transactions into actionable KPIs: gross margin, markup, average selling price, and profitability rankings
+- **Data Visualization** — Designed a 5-page interactive dashboard for executive-level storytelling
+- **Cloud Analytics** — End-to-end implementation on Databricks using SQL, Unity Catalog, and Lakeview dashboards
+
+---
+
+## Dashboard Overview
+
+The interactive dashboard provides five analytical perspectives:
+
+### 1. Executive Summary
+High-level KPIs at a glance — total revenue, order volume, average gross margin, and average selling price. Includes revenue-by-year and monthly trend charts to quickly assess business trajectory.
+
+### 2. Revenue & Growth
+Year-over-year revenue comparison with monthly overlays. Answers: *Is the business growing? Is margin keeping pace with revenue?*
+
+### 3. Product Profitability
+Category-level breakdown of margins, markups, and selling prices. Line charts show how each category's margin has evolved over time — useful for spotting pricing strategy drift.
+
+### 4. Regional Analysis
+East vs. West side-by-side on revenue, margins, order volume, and markup. Highlights whether one region subsidizes the other or if pricing power differs geographically.
+
+### 5. Pricing Intelligence
+Deep-dive into pricing signals and product-level economics (bottom 10 margin products, discount impact analysis).
+
+---
+
+## Project Structure
 
 ```
 pricing-analysis-da-viz/
-├── README.md                          # This file
-├── pricing_analysis.ipynb             # Data pipeline notebook
-└── Specialty Coffee Pricing Analysis  # Lakeview dashboard (.lvdash.json)
-    — Strategic Review 2023–2025.lvdash.json
+├── README.md                              ← You are here
+├── pricing_analysis.ipynb                 ← Data pipeline (SQL notebook)
+└── pricing_dashboard.lvdash.json          ← Interactive dashboard definition
 ```
 
-## Data Pipeline (`pricing_analysis`)
+---
 
-The notebook ingests raw CSV data from a Unity Catalog Volume and produces three curated tables:
+## Data & Methodology
 
-| Output Table | Description |
-| --- | --- |
-| `Pricing_analysis.data.orders_master` | Denormalized fact table — orders joined with customer and product data, enriched with profitability metrics |
-| `Pricing_analysis.data.monthly_performance` | Monthly KPIs aggregated by product category and region |
-| `Pricing_analysis.data.product_profitability` | Product-level margins, markups, and volume metrics |
+**Data Sources:** 3 years of order transactions, a customer master table (with region), and a product catalog (with list prices and base costs).
 
-### Source Data
+**Approach:**
+1. **Consolidate** — Union yearly order files into a single master dataset
+2. **Enrich** — Join with customer and product data to add context (region, category, cost basis)
+3. **Compute** — Derive profitability metrics: gross profit, margin %, markup %, and average selling price
+4. **Aggregate** — Build summary views by month/category/region for trend analysis and by product for profitability ranking
+5. **Visualize** — Present findings in an interactive dashboard designed for non-technical stakeholders
 
-All source files reside in `/Volumes/Pricing_analysis/data/all_datasets/`:
-- `Orders_2023.csv`, `Orders_2024.csv`, `Orders_2025.csv` — transaction records
-- `customers.csv` — customer master (Region, Join Date)
-- `products.csv` — product catalog (Name, Category, Price, Base Cost)
+---
 
-### Key Metrics
+## Tools & Technologies
 
-- **Gross Profit** = Revenue − COGS
-- **Gross Margin %** = (Revenue − COGS) / Revenue × 100
-- **Average Selling Price** = Revenue / Quantity
-- **Markup %** = (ASP − Base Cost) / Base Cost × 100
+- **Databricks** — Cloud data platform (compute, storage, orchestration)
+- **SQL** — All data transformations and metric calculations
+- **Unity Catalog** — Data governance and table management
+- **Lakeview Dashboards** — Interactive business intelligence visualizations
+- **Git** — Version control and collaboration
 
-## Dashboard
+---
 
-The Lakeview dashboard (`.lvdash.json`) provides a 5-page interactive analysis:
+## About
 
-| Page | Focus |
-| --- | --- |
-| **Executive Summary** | High-level KPIs (revenue, orders, margin, ASP) and top-line trends |
-| **Revenue & Growth** | Year-over-year comparisons, monthly revenue by year, markup trends |
-| **Product Profitability** | Category-level margins, markup power, ASP comparisons, margin trends over time |
-| **Regional Analysis** | East vs. West performance — revenue, margin, orders, and pricing power |
-| **Pricing Intelligence** | Deep-dive pricing signals (in development) |
-
-### Dashboard Datasets
-
-The dashboard queries two tables directly:
-- `Pricing_analysis.data.orders_master` — for time-series and regional analysis
-- `Pricing_analysis.data.product_profitability` — for product-level rankings
-
-## How to Run
-
-1. **Attach compute** — Connect to a Databricks SQL warehouse or serverless compute
-2. **Run the notebook** — Execute all cells in `pricing_analysis` to create/refresh the tables
-3. **Open the dashboard** — The `.lvdash.json` file renders automatically in the Databricks workspace
-
-## Requirements
-
-- Databricks workspace with Unity Catalog enabled
-- Access to the `Pricing_analysis` catalog and `data` schema
-- Source CSV files in the specified Volume path
+This project was built as a pricing analytics case study demonstrating the ability to take raw transactional data, engineer it into business-ready datasets, and present strategic insights through interactive visualizations — the full analytics lifecycle from data to decision.
