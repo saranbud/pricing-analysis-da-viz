@@ -39,22 +39,19 @@ This project answers that question by analyzing **4,400+ orders** across a speci
 ### Revenue & Growth
 > Year-over-year revenue comparison, monthly overlays, and markup trend analysis.
 
-![Revenue & Growth](images/02_revenue_growth.png)
+<img width="1672" height="787" alt="image" src="https://github.com/user-attachments/assets/3ed59d67-0640-44bd-afae-86c9d28b5fbe" />
+
 
 ### Product Profitability
 > Category-level margins, markup power, and how each category's profitability has evolved over time.
 
-![Product Profitability](images/03_product_profitability.png)
+<img width="1872" height="833" alt="image" src="https://github.com/user-attachments/assets/a528ee30-9901-42cd-812c-00d1eb20d5c4" />
+
 
 ### Regional Analysis
 > East vs. West — revenue, margins, order volume, and pricing power comparison.
 
-![Regional Analysis](images/04_regional_analysis.png)
-
-### Pricing Intelligence
-> Product-level deep-dive: bottom 10 margin products and discount impact analysis.
-
-![Pricing Intelligence](images/05_pricing_intelligence.png)
+<img width="1867" height="827" alt="image" src="https://github.com/user-attachments/assets/4a35b43d-cf75-488b-b50d-c2eda27dcfa4" />
 
 ---
 
