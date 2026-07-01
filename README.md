@@ -4,7 +4,7 @@
 
 > *"Are we pricing our coffee products profitably across regions, and how has our pricing strategy performed over three years?"*
 
-This project answers that question by analyzing **4,400+ orders** across a specialty coffee company's full product catalog — from single-origin beans and subscriptions to grinders and accessories — spanning **2023 to 2025**.
+This project answers that question by analyzing **4,400+ orders** across a specialty coffee company's full product catalog from single-origin beans and subscriptions to grinders and accessories spanning **2023 to 2025**.
 
 ---
 
@@ -15,7 +15,7 @@ This project answers that question by analyzing **4,400+ orders** across a speci
 | **Revenue Growth** | Tracked year-over-year revenue trends across 5 product categories to identify growth drivers |
 | **Margin Health** | Computed gross margins at both the product and category level to flag underperforming SKUs |
 | **Regional Pricing Power** | Compared East vs. West region performance to uncover pricing inconsistencies and market opportunities |
-| **Product Profitability Ranking** | Identified top and bottom 10 products by realized gross margin — surfacing items where discounts erode list-price margins |
+| **Product Profitability Ranking** | Identified top and bottom 10 products by realized gross margin, surfacing items where discounts erode list-price margins |
 | **Pricing Trends Over Time** | Monthly markup and selling price trends reveal whether pricing discipline held or slipped |
 
 ---
@@ -98,4 +98,4 @@ pricing-analysis-da-viz/
 
 ## About
 
-This project was built as a pricing analytics case study demonstrating the ability to take raw transactional data, engineer it into business-ready datasets, and present strategic insights through interactive visualizations — the full analytics lifecycle from data to decision.
+This project was built as a pricing analytics case study demonstrating the ability to take raw transactional data, engineer it into business-ready datasets, and present strategic insights through interactive visualizations, the full analytics lifecycle from data to decision.
