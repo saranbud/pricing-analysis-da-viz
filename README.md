@@ -29,24 +29,32 @@ This project answers that question by analyzing **4,400+ orders** across a speci
 
 ---
 
-## Dashboard Overview
+## Dashboard Preview
 
-The interactive dashboard provides five analytical perspectives:
+### Executive Summary
+> Total revenue, order volume, gross margin, and selling price KPIs with year-over-year and monthly trend charts.
 
-### 1. Executive Summary
-High-level KPIs at a glance — total revenue, order volume, average gross margin, and average selling price. Includes revenue-by-year and monthly trend charts to quickly assess business trajectory.
+![Executive Summary](images/01_executive_summary.png)
 
-### 2. Revenue & Growth
-Year-over-year revenue comparison with monthly overlays. Answers: *Is the business growing? Is margin keeping pace with revenue?*
+### Revenue & Growth
+> Year-over-year revenue comparison, monthly overlays, and markup trend analysis.
 
-### 3. Product Profitability
-Category-level breakdown of margins, markups, and selling prices. Line charts show how each category's margin has evolved over time — useful for spotting pricing strategy drift.
+![Revenue & Growth](images/02_revenue_growth.png)
 
-### 4. Regional Analysis
-East vs. West side-by-side on revenue, margins, order volume, and markup. Highlights whether one region subsidizes the other or if pricing power differs geographically.
+### Product Profitability
+> Category-level margins, markup power, and how each category's profitability has evolved over time.
 
-### 5. Pricing Intelligence
-Deep-dive into pricing signals and product-level economics (bottom 10 margin products, discount impact analysis).
+![Product Profitability](images/03_product_profitability.png)
+
+### Regional Analysis
+> East vs. West — revenue, margins, order volume, and pricing power comparison.
+
+![Regional Analysis](images/04_regional_analysis.png)
+
+### Pricing Intelligence
+> Product-level deep-dive: bottom 10 margin products and discount impact analysis.
+
+![Pricing Intelligence](images/05_pricing_intelligence.png)
 
 ---
 
@@ -56,7 +64,13 @@ Deep-dive into pricing signals and product-level economics (bottom 10 margin pro
 pricing-analysis-da-viz/
 ├── README.md                              ← You are here
 ├── pricing_analysis.ipynb                 ← Data pipeline (SQL notebook)
-└── pricing_dashboard.lvdash.json          ← Interactive dashboard definition
+├── pricing_dashboard.lvdash.json          ← Interactive dashboard definition
+└── images/                                ← Dashboard screenshots
+    ├── 01_executive_summary.png
+    ├── 02_revenue_growth.png
+    ├── 03_product_profitability.png
+    ├── 04_regional_analysis.png
+    └── 05_pricing_intelligence.png
 ```
 
 ---
