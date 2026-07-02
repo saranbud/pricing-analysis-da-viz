@@ -56,21 +56,6 @@ This project answers that question by analyzing **4,400+ orders** across a speci
 
 ---
 
-## Project Structure
-
-```
-pricing-analysis-da-viz/
-├── README.md                              ← You are here
-├── pricing_analysis.ipynb                 ← Data pipeline (SQL notebook)
-├── pricing_dashboard.lvdash.json          ← Interactive dashboard definition
-└── images/                                ← Dashboard screenshots
-    ├── 01_executive_summary.png
-    ├── 02_revenue_growth.png
-    ├── 03_product_profitability.png
-    ├── 04_regional_analysis.png
-    └── 05_pricing_intelligence.png
-```
-
 ---
 
 ## Data & Methodology
@@ -99,3 +84,34 @@ pricing-analysis-da-viz/
 ## About
 
 This project was built as a pricing analytics case study demonstrating the ability to take raw transactional data, engineer it into business-ready datasets, and present strategic insights through interactive visualizations, the full analytics lifecycle from data to decision.
+
+%md
+## Recommendations
+
+These are the actions I'd bring to a strategy meeting based on what the data is telling us:
+
+### 1. Double Down on Subscriptions
+Subscriptions are the clear winner here. They have the **highest margin (65%)**, the **highest markup (200%)**, and they bring in recurring revenue. If I were advising this business, I'd push hard on subscriber acquisition through loyalty discounts, referral programs, and trial-to-paid conversion campaigns. The margin profile means even aggressive discounting on the first month still pays off long-term.
+
+### 2. Reprice or Restructure Merchandise
+Merchandise is the weakest category by every profitability metric. A few things I'd explore:
+- Review the bottom-performing SKUs and ask whether they're worth keeping at current prices
+- Test price increases on branded items like mugs and tumblers where brand loyalty gives us room
+- Alternatively, reposition merchandise as a customer acquisition tool rather than a profit center (bundle it with equipment)
+
+### 3. Fix the Data Quality Issue (Null Regions)
+The regional charts show a "null" region appearing in the data. That means some customers have no region assigned, which makes our segmentation less reliable. Quick wins here:
+- Audit the customer source file for missing values
+- Add validation rules so new records can't come in without a region
+- Backfill existing records using shipping address or order history
+
+### 4. Expand Volume in Underperforming Regions
+Here's the good news: margins are consistent across regions. That means the gap between West and the others is purely a volume problem, not a pricing one. The business can invest in marketing for North and South without worrying about diluting margins. The playbook that works in the West should translate.
+
+### 5. Introduce Seasonal Pricing
+Monthly markup swings between **120% and 170%**, and that's not intentional. It's just mix shifting. A deliberate seasonal pricing calendar could:
+- Capture more margin during natural demand spikes (Oct through Dec shows clear peaks)
+- Use targeted discounts in slow months to keep volume up without blanket markdowns
+
+### 6. Create Cross-Category Bundles
+**Grinders & Brewers** drive the most revenue but sit at moderate margins. **Subscriptions** and **Consumables** have great margins but lower ticket prices. The obvious play is bundling: "Buy a grinder, get 3 months of subscription at 20% off." This increases order value, moves customers into recurring products, and creates switching costs through equipment lock-in.
