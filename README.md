@@ -1,4 +1,4 @@
-# ☕ Specialty Coffee Pricing Analysis — Strategic Review (2023–2025)
+# Specialty Coffee Pricing Analysis (2023–2025)
 
 ## The Business Question
 
