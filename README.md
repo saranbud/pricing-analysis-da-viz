@@ -85,7 +85,6 @@ This project answers that question by analyzing **4,400+ orders** across a speci
 
 This project was built as a pricing analytics case study demonstrating the ability to take raw transactional data, engineer it into business-ready datasets, and present strategic insights through interactive visualizations, the full analytics lifecycle from data to decision.
 
-%md
 ## Recommendations
 
 These are the actions I'd bring to a strategy meeting based on what the data is telling us:
