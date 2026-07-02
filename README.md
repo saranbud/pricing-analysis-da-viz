@@ -100,16 +100,16 @@ Merchandise is the weakest category by every profitability metric. A few things 
 - Alternatively, reposition merchandise as a customer acquisition tool rather than a profit center (bundle it with equipment)
 
 ### 3. Fix the Data Quality Issue (Null Regions)
-The regional charts show a "null" region appearing in the data. That means some customers have no region assigned, which makes our segmentation less reliable. Quick wins here:
+The regional charts show a "null" region appearing in the data. That means some customers have no region assigned, which makes our segmentation less reliable. What can help here:
 - Audit the customer source file for missing values
 - Add validation rules so new records can't come in without a region
 - Backfill existing records using shipping address or order history
 
 ### 4. Expand Volume in Underperforming Regions
-Here's the good news: margins are consistent across regions. That means the gap between West and the others is purely a volume problem, not a pricing one. The business can invest in marketing for North and South without worrying about diluting margins. The playbook that works in the West should translate.
+Good news: margins are consistent across regions. That means the gap between West and the others is purely a volume problem, not a pricing one. The business can invest in marketing for North and South without worrying about diluting margins. The playbook that works in the West should translate.
 
 ### 5. Introduce Seasonal Pricing
-Monthly markup swings between **120% and 170%**, and that's not intentional. It's just mix shifting. A deliberate seasonal pricing calendar could:
+Monthly markup swings between **120% and 170%**, and that's not intentional. A deliberate seasonal pricing calendar could:
 - Capture more margin during natural demand spikes (Oct through Dec shows clear peaks)
 - Use targeted discounts in slow months to keep volume up without blanket markdowns
 
